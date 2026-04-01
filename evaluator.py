@@ -43,25 +43,26 @@ def tokenaziation(exp):
             while i < len(exp) and exp[i].isdigit():
                 num += exp[i]
                 i += 1
-            tokens.append(("NUM", int(num)))
+            tokens.append(["NUM", int(num)])
         #checking for operators
         elif char in "+-*/":
-            tokens.append(("OP", char))
+            tokens.append(["OP", char])
             i += 1
         #checking for parentheses
         elif char == "(":
-            tokens.append(("LPAREN", char))
+            tokens.append(["LPAREN", char])
             i += 1
         #checking for right parentheses
         elif char == ")":           
-            tokens.append(("RPAREN", char))
+            tokens.append(["RPAREN", char])
             i += 1
         #if the character is not recognized, raise a ValueError
         else:
-            raise ValueError(f"Invalid character: {char}")
-            i += 1
+            return "ERROR"
+        
+        i += 1
     #append an end token to signify the end of the expression
-    tokens.append(("END", ""))
+    tokens.append(["END", ""])
     return tokens
 
 

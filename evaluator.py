@@ -43,18 +43,18 @@ def tokenaziation(exp):
             while i < len(exp) and exp[i].isdigit():
                 num += exp[i]
                 i += 1
-            tokens.append(["NUM", int(num)])
+            tokens.append({"type": "NUM", "value": int(num)})
         #checking for operators
         elif char in "+-*/":
-            tokens.append(["OP", char])
+            tokens.append({"type": "OP", "value": char})
             i += 1
         #checking for parentheses
         elif char == "(":
-            tokens.append(["LPAREN", char])
+            tokens.append({"type": "LPAREN", "value": char})
             i += 1
         #checking for right parentheses
         elif char == ")":           
-            tokens.append(["RPAREN", char])
+            tokens.append({"type": "RPAREN", "value": char})
             i += 1
         #if the character is not recognized, raise a ValueError
         else:
@@ -62,7 +62,7 @@ def tokenaziation(exp):
         
         i += 1
     #append an end token to signify the end of the expression
-    tokens.append(["END", ""])
+    tokens.append({"type": "END", "value": ""})
     return tokens
 
 
@@ -70,3 +70,4 @@ def tokenaziation(exp):
 if __name__ == "__main__":                      
     #calling evaluate function with input.txt file
     evaluate_file("input.txt")
+

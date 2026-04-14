@@ -118,9 +118,6 @@ def encryption_function(shift1, shift2):  # Try opening and reading the raw inpu
 	
 	encrypted_text, meta_text = encrypt_txt(raw_text, shift1, shift2) # Encrypt text and also generate metadata tags.
 
-	os.makedirs(os.path.dirname(B), exist_ok=True) # Ensure encrypted output directory exists.
-	os.makedirs(os.path.dirname(D), exist_ok=True) # Ensure metadata output directory exists.
-
 	
 	with open(B, "w", encoding="utf-8") as encrypted_file:      # Open encrypted output file in write mode.
 		

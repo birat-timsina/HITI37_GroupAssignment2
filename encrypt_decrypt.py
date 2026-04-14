@@ -1,4 +1,4 @@
-#File encyption and decryption with verification
+#File encryption and decryption with verification
 
 import os #importing os to check if file existence
 
@@ -130,6 +130,70 @@ def encryption_function(shift1, shift2):  # Try opening and reading the raw inpu
 	
 	return True     # Return True to indicate step succeeded.
 
+def decryption_function(shift1, shift2):
+	"""Read encrypted_text.txt and write decrypted_text.txt."""
+	try:
+		with open(B, "r", encoding="utf-8") as encrypted_file:
+			encrypted_text = encrypted_file.read()  # Read encrypted text.
+	except FileNotFoundError:
+		print("Error: encrypted_text.txt not found. Encryption may have failed.")
+		return False
+
+	meta_text = None  # Default when metadata file is missing.
+	try:
+		with open(D, "r", encoding="utf-8") as meta_file:
+			meta_text = meta_file.read()  # Read metadata contents.
+	except FileNotFoundError:
+		meta_text = None
+
+	decrypted_text = decrypt_text(encrypted_text, shift1, shift2, meta_text)
+
+	with open(C, "w", encoding="utf-8") as decrypted_file:
+		decrypted_file.write(decrypted_text)  # Write decrypted output.
+	return True
+
+
+def verification_function():
+	"""Compare raw_text.txt and decrypted_text.txt and print result."""
+	try:
+		with open(A, "r", encoding="utf-8") as source_file:
+			original_text = source_file.read()  # Read original text.
+		with open(C, "r", encoding="utf-8") as decrypted_file:
+			decrypted_text = decrypted_file.read()  # Read decrypted text.
+	except FileNotFoundError:
+		print("Verification failed: required files are missing.")
+		return
+
+	if original_text == decrypted_text:
+		print("Decryption successful: decrypted text matches the original.")
+	else:
+		print("Decryption failed: decrypted text does not match the original.")
+
+
+def main():
+	"""Run the full assignment workflow."""
+	os.makedirs(BASE_DIR + "/encrypted", exist_ok=True)  # Ensure output dirs exist.
+	os.makedirs(BASE_DIR + "/decrypted", exist_ok=True)
+	os.makedirs(BASE_DIR + "/metadata", exist_ok=True)
+
+	try:
+		shift1 = int(input("Enter shift1: "))  # Read shift1 from input.
+		shift2 = int(input("Enter shift2: "))  # Read shift2 from input.
+	except ValueError:
+		print("Invalid input. Please enter integer values for shift1 and shift2.")
+		return
+
+	if not encryption_function(shift1, shift2):
+		return
+
+	if not decryption_function(shift1, shift2):
+		return
+
+	verification_function()
+
+
+if __name__ == "__main__":
+	main()  # Start program from main.
 
 
 

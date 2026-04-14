@@ -1,4 +1,3 @@
-#File encryption and decryption with verification
 
 import os #importing os to check if file existence
 

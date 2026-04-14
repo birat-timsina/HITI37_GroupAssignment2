@@ -2,6 +2,14 @@
 
 import os #importing os to check if file existence
 
+BASE_DIR = os.path.dirname(__file__)
+
+A = os.path.join(BASE_DIR, "raw_text.txt")
+B = os.path.join(BASE_DIR, "encrypted", "encrypted_text.txt")
+C = os.path.join(BASE_DIR, "decrypted", "decrypted_text.txt")
+D = os.path.join(BASE_DIR, "metadata", "encryption_meta.txt")
+
+
 def lower_encrypt(char,shift1,shift2):   #function to encrypt lowercase characters
     if "a" <= char <="m":                #checking if the character is in the first half of the alphabet
         shift = shift1 * shift2          #calculating the total shift by multiplying the two shift values
@@ -92,6 +100,39 @@ def decrypt_text(text, shift1, shift2, meta_text=None):         # Create list to
 
 	# Join all decrypted characters into one string and return.
 	return "".join(decrypted_chars)
+
+
+def encryption_function(shift1, shift2):  # Try opening and reading the raw input file.
+	try:
+		
+		with open(A, "r", encoding="utf-8") as source_file: # Open raw file in read mode with UTF-8 encoding.
+			
+			raw_text = source_file.read() # Read complete file text into memory.
+	
+	except FileNotFoundError:  # Handle missing file error safely.
+		
+		print("Error: raw_text.txt not found in the current folder.") # Print user-friendly error message.
+		
+		return False      # Return False to indicate step failed.
+
+	
+	encrypted_text, meta_text = encrypt_txt(raw_text, shift1, shift2) # Encrypt text and also generate metadata tags.
+
+	os.makedirs(os.path.dirname(B), exist_ok=True) # Ensure encrypted output directory exists.
+	os.makedirs(os.path.dirname(D), exist_ok=True) # Ensure metadata output directory exists.
+
+	
+	with open(B, "w", encoding="utf-8") as encrypted_file:      # Open encrypted output file in write mode.
+		
+		encrypted_file.write(encrypted_text)      # Write encrypted text to file.
+
+	
+	with open(D, "w", encoding="utf-8") as meta_file:    # Open metadata file in write mode.
+		
+		meta_file.write(meta_text)     # Write metadata text to file.
+	
+	return True     # Return True to indicate step succeeded.
+
 
 
 

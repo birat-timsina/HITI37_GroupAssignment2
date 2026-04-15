@@ -211,13 +211,13 @@ def evaluate_file(input_path: str):
                 "result": "ERROR"
             })
 
-    #print results
-    for res in results:
-        print(f"Input: {res['input']}")
-        print(f"Tree: {res['tree']}")
-        print(f"Tokens: {res['tokens']}")
-        print(f"Result: {res['result']}")
-        print("-" * 30)
+    #writing output file
+    with open("output.txt", "w") as f:
+        for r in results:
+            f.write(f"Input: {r['input']}\n")
+            f.write(f"Tree: {r['tree']}\n")
+            f.write(f"Tokens: {r['tokens']}\n")
+            f.write(f"Result: {r['result']}\n\n") 
 
 #main function
 if __name__ == "__main__":            

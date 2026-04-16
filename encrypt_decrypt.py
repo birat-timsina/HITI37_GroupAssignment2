@@ -160,7 +160,6 @@ def verification_function():
 
 
 def main():
-	"""Run the full assignment workflow."""
 	os.makedirs(BASE_DIR + "/encrypted", exist_ok=True)  # Ensure output dirs exist.
 	os.makedirs(BASE_DIR + "/decrypted", exist_ok=True)
 	os.makedirs(BASE_DIR + "/metadata", exist_ok=True)

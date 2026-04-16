@@ -1,4 +1,4 @@
-#(code written by s399582)
+# Expression Parser & Evaluator
 def tokenaziation(exp):
     #initailize tokens list
     tokens = []

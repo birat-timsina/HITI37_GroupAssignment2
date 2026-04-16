@@ -6,16 +6,16 @@ def tokenaziation(exp):
 
     #loop through expression and tokenize it based on character type
     while i < len(exp):
-        char = exp[i]
+        current_char = exp[i]
 
         #checking for white space and skipping it
-        if char.isspace():
+        if current_char.isspace():
             i += 1
             continue
 
         #checking for digits 
-        elif char.isdigit():
-            num = char
+        elif current_char.isdigit():
+            num = current_char
             i += 1
 
             #loop to capture the entire number if it has more than one digit
@@ -25,18 +25,18 @@ def tokenaziation(exp):
             tokens.append(("NUM", int(num)))
 
         #checking for operators
-        elif char in "+-*/":
-            tokens.append(("OP", char))
+        elif current_char in "+-*/":
+            tokens.append(("OP", current_char))
             i += 1
 
         #checking for parentheses
-        elif char == "(":
-            tokens.append(("LPAREN", char))
+        elif current_char == "(":
+            tokens.append(("LPAREN", current_char))
             i += 1
 
         #checking for right parentheses
-        elif char == ")":           
-            tokens.append(("RPAREN", char))
+        elif current_char == ")":           
+            tokens.append(("RPAREN", current_char))
             i += 1
 
         #if the character is not recognized, raise a ValueError

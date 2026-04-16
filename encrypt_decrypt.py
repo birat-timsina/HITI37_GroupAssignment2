@@ -43,59 +43,49 @@ def encrypt_txt(text,shift1,shift2):   #function to encrypt the entire text usin
     meta = []
     
     for char in text:
-        if "a" <= char <="m":
-            encrypt_char = lower_encrypt(char,shift1,shift2) #encrypting the character using the lower_encrypt function
-            encrypt_chars.append(encrypt_char)         #appending the encrypted character to the encrypt_chars list
-            meta.append("L")           #appending "L" to the meta list to indicate that the character was a lowercase letter
-        elif "A" <= char <="M":
-            encrypt_char = upper_encrypt(char,shift1,shift2)      #encrypting the character using the upper_encrypt function
-            encrypt_chars.append(encrypt_char) 
-            meta.append("U")
-        elif "n" <= char <="z":                            #checking if the character and encrypting it using the lower_encrypt function
+        if "a" <= char <="m":                              # Lowercase first half (a-m): tag "L"
             encrypt_char = lower_encrypt(char,shift1,shift2)
             encrypt_chars.append(encrypt_char)
-            meta.append("L")
-        elif "N" <= char <="Z":                #checking if the character and encrypting it using the upper_encrypt function
+            meta.append("L")    # "L" = lowercase a-m half, base was ord("a")
+        elif "n" <= char <="z":                            # Lowercase second half (n-z): tag "l"
+            encrypt_char = lower_encrypt(char,shift1,shift2)
+            encrypt_chars.append(encrypt_char)
+            meta.append("l")    # "l" = lowercase n-z half, base was ord("n")
+        elif "A" <= char <="M":                            # Uppercase first half (A-M): tag "U"
             encrypt_char = upper_encrypt(char,shift1,shift2)
             encrypt_chars.append(encrypt_char)
-            meta.append("U")
+            meta.append("U")    # "U" = uppercase A-M half, base was ord("A")
+        elif "N" <= char <="Z":                            # Uppercase second half (N-Z): tag "u"
+            encrypt_char = upper_encrypt(char,shift1,shift2)
+            encrypt_chars.append(encrypt_char)
+            meta.append("u")    # "u" = uppercase N-Z half, base was ord("N")
         else:
             encrypt_chars.append(char)
-            meta.append("0")
+            meta.append("0")    # "0" = not a letter, preserved as-is
 
     return "".join(encrypt_chars), "".join(meta)
 
-def decrypt_text(text, shift1, shift2, meta_text=None):         # Create list to collect decrypted characters.
-	decrypted_chars = []                        
+def decrypt_text(text, shift1, shift2, meta_text=None):  # Create list to collect decrypted characters.
+	decrypted_chars = []
 	for index, ch in enumerate(text):       # Loop with index so we can read matching metadata character.
-		
-		meta = meta_text[index] if meta_text and index < len(meta_text) else None   # Read metadata for this position if available, otherwise None.
 
-		# If metadata says lowercase first half rule was used.
-		if meta == "l":
-			
-			base = ord("a")         # Set lowercase ASCII base.
-			shift = shift1 * shift2
-			decrypted_chars.append(chr(base + (ord(ch) - base - shift) % 26))   # Reverse forward shift by subtracting it
-		# If metadata says lowercase second half rule was used.
-		elif meta == "r":
+		meta = meta_text[index] if meta_text and index < len(meta_text) else None  # Read metadata for this position.
+		shift = shift1 * shift2  # Same shift used in all encryption paths.
+
+		if meta == "L":          # Original was in a-m, base was ord("a").
 			base = ord("a")
-			shift = shift1 + shift2 # For the second half, we used a different shift in encryption, so we need to reverse that specific shift.
-			decrypted_chars.append(chr(base + (ord(ch) - base + shift) % 26))
-		elif meta == "u":
+			decrypted_chars.append(chr(base + (ord(ch) - base - shift) % 26))  # Reverse by subtracting shift.
+		elif meta == "l":        # Original was in n-z, base was ord("n").
+			base = ord("n")
+			decrypted_chars.append(chr(base + (ord(ch) - base - shift) % 26))  # Reverse by subtracting shift.
+		elif meta == "U":        # Original was in A-M, base was ord("A").
 			base = ord("A")
-			shift = shift1 # For uppercase first half, we used the same shift as lowercase first half, so we reverse it the same way.
-			decrypted_chars.append(chr(base + (ord(ch) - base + shift) % 26))
-		elif meta == "v":
-			base = ord("A")
-			shift = shift2 ** 2 # For uppercase second half, we used a different shift in encryption, so we need to reverse that specific shift.
-			decrypted_chars.append(chr(base + (ord(ch) - base - shift) % 26))
-		elif "a" <= ch <= "z":
-			decrypted_chars.append(lower_encrypt(ch, shift1, shift2))	# If no metadata and character is uppercase, use fallback brute force.
-		elif "A" <= ch <= "Z":   # Decrypt uppercase by testing all candidates.
-			decrypted_chars.append(upper_encrypt(ch, shift1, shift2))
+			decrypted_chars.append(chr(base + (ord(ch) - base - shift) % 26))  # Reverse by subtracting shift.
+		elif meta == "u":        # Original was in N-Z, base was ord("N").
+			base = ord("N")
+			decrypted_chars.append(chr(base + (ord(ch) - base - shift) % 26))  # Reverse by subtracting shift.
 		else:
-			decrypted_chars.append(ch)	# Preserve spaces, punctuation, numbers, and newlines.
+			decrypted_chars.append(ch)  # "0" or missing: preserve spaces, punctuation, numbers, newlines.
 
 	# Join all decrypted characters into one string and return.
 	return "".join(decrypted_chars)

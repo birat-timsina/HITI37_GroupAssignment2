@@ -1,1 +1,1 @@
-this is a laude allu ke akaude
+This will set the value and calculate the decription and encryption of the text and also compares both text either same or different. 
